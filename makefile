@@ -1,35 +1,21 @@
-# Compiler
 CXX = g++
+CXXFLAGS = -std=c++17 -Wall
+LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
 
-# Compiler flags
-CXXFLAGS = -std=c++11 -Wall
+all: Demo test
 
-# Source files
-SRCS = main.cpp Tree.cpp Iterator.cpp
+Demo: Demo.o node.hpp tree.hpp
+	$(CXX) $(CXXFLAGS) -o Demo Demo.o node.hpp tree.hpp $(LDFLAGS)
 
-# Object files
-OBJS = $(SRCS:.cpp=.o)
+test: test.o node.hpp tree.hpp
+	$(CXX) $(CXXFLAGS) -o test test.o node.hpp tree.hpp $(LDFLAGS)
 
-# Header files
-HDRS = Tree.hpp TreeNode.hpp Iterator.hpp
+Demo.o: Demo.cpp node.hpp tree.hpp
+	$(CXX) $(CXXFLAGS) -c Demo.cpp
 
-# Output executable
-EXEC = main
+test.o: test.cpp node.hpp tree.hpp
+	$(CXX) $(CXXFLAGS) -c test.cpp
 
-# Default target
-all: $(EXEC)
-
-# Rule to build the executable
-$(EXEC): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $(EXEC) $(OBJS)
-
-# Rule to build object files
-%.o: %.cpp $(HDRS)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-# Rule to clean the build
 clean:
-	rm -f $(OBJS) $(EXEC)
+	rm -f Demo test *.o
 
-# Phony targets
-.PHONY: all clean
